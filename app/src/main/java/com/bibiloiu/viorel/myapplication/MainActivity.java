@@ -1,7 +1,6 @@
 package com.bibiloiu.viorel.myapplication;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -16,6 +15,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -55,13 +56,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng sydney = new LatLng(-34, 151);
         final MarkerOptions title = new MarkerOptions().position(sydney).title("Marker in Sydney");
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-
             @Override
             public void onInfoWindowClick(Marker arg0) {
-                Intent intent = new Intent(getBaseContext(), Activity.class);
+                Intent intent = new Intent(getBaseContext(), DisplayDetailsActivity.class);
                 // Starting the  Activity
+                intent.putExtra(EXTRA_MESSAGE,arg0.getTitle());
                 startActivity(intent);
                 Log.d("mGoogleMap1", "Activity_Calling");
+
             }
         });
         mMap.addMarker(title);
