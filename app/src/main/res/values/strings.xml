@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Pollution Map</string>
     <string name="EXTRA_MESSAGE">com.bibiloiu.viorel.myapplication.message</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="Pollution">Hello</string>
 
 </resources>
