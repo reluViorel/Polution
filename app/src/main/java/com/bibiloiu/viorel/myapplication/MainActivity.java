@@ -3,33 +3,24 @@ package com.bibiloiu.viorel.myapplication;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.AsyncTask;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 import database.PollutionDbItem;
@@ -48,6 +39,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         SqlHelper db = new SqlHelper(this);
+        db.deleteAllPollutionSource();
+
         double lat = 44.4379853;
         double lng = 25.9545552;
         for (int i = 0; i < 11; i++) {
@@ -55,8 +48,20 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             lat = lat + offset;
             lng = lng + offset;
             PollutionDbItem offsetItem = new PollutionDbItem(lat, lng, "marker");
+
             db.addPollutionSource(offsetItem);
         }
+        double lat3 = 44.4379853;
+        double lng3 = 22.9545552;
+        for (int i = 0; i < 11; i++) {
+            double offset = i / 110d;
+            lat3 = lat3 + offset;
+            lng3 = lng3 + offset;
+            PollutionDbItem offsetItem = new PollutionDbItem(lat3, lng3, "marker");
+
+            db.addPollutionSource(offsetItem);
+        }
+
     }
 
     private void setUpClusterer() {
@@ -84,8 +89,15 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         List<PollutionDbItem> pollutions = db.getAllPollutionSources();
         for (PollutionDbItem pollutionDbItem : pollutions) {
 
-            mClusterManager.addItem(new PollutionItem(null,pollutionDbItem.getLatitude(),
-                    pollutionDbItem.getLongitude(),pollutionDbItem.getTitle(),null));
+            Drawable drawable = getResources().getDrawable(R.drawable.airplane);
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            Bitmap bitmap = bitmapDrawable.getBitmap();
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 4, bitmap.getHeight() / 4, false);
+            BitmapDescriptor bitmapDescriptor =
+                    BitmapDescriptorFactory.fromBitmap(scaledBitmap);
+
+            mClusterManager.addItem(new PollutionItem(bitmapDescriptor, pollutionDbItem.getLatitude(),
+                    pollutionDbItem.getLongitude(), pollutionDbItem.getTitle(), null));
         }
     }
 
@@ -106,6 +118,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         Toast.LENGTH_SHORT).show();
 //                FetchPollutionTask task = new FetchPollutionTask();
 //                task.execute(arg0.getPosition().latitude,arg0.getPosition().longitude);
+
+                Intent intent = new Intent(getApplicationContext(), DisplayDetailsActivity.class);
+                intent.putExtra(Intent.EXTRA_TEXT, arg0.getTitle());
+                startActivity(intent);
             }
         });
         mMap.setMyLocationEnabled(true);

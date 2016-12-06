@@ -27,8 +27,8 @@ public class SqlHelper extends SQLiteOpenHelper {
         String CREATE_POLLUTION_TABLE = "CREATE table pollutions ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "title TEXT, " +
-                "latitude double, " +
-                "longitude double";
+                "latitude decimal, " +
+                "longitude decimal)";
 
         // create Pollutions table
         db.execSQL(CREATE_POLLUTION_TABLE);
@@ -166,16 +166,19 @@ public class SqlHelper extends SQLiteOpenHelper {
 
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
-
         // 2. delete
         db.delete(TABLE_POLLUTIONS,
                 KEY_ID+" = ?",
                 new String[] { String.valueOf(dbItem.getId()) });
-
         // 3. close
         db.close();
-
         Log.d("deletePollution", dbItem.toString());
+    }
+    // Deleting single dbItem
+    public void deleteAllPollutionSource() {
 
+        SQLiteDatabase db = this.getWritableDatabase();
+        // 2. delete
+        db.execSQL("delete from "+ TABLE_POLLUTIONS);
     }
 }
