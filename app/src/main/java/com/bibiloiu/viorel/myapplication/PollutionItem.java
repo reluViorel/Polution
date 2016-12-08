@@ -10,7 +10,7 @@ public class PollutionItem implements ClusterItem {
     String title;
     String snippet;
 
-    public PollutionItem(BitmapDescriptor ic,Double lat , Double lng,String tit ,String sni) {
+    public PollutionItem(BitmapDescriptor ic, Double lat , Double lng,String tit ,String sni) {
         mPosition = new LatLng(lat, lng);
         icon = ic;
         title = tit;

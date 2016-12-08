@@ -1,23 +1,27 @@
 package database;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.clustering.ClusterItem;
-
 public class PollutionDbItem  {
     private int id;
     private double latitude;
     private double longitude;
     private String title;
-
+    private String type;
     public PollutionDbItem(){}
 
     public PollutionDbItem(double latitude,
-                           double longitude, String title) {
-        this.id = id;
+                           double longitude, String title, String type) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.title = title;
+        this.type=type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getId() {
