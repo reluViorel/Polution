@@ -56,8 +56,7 @@ class FetchPollutionTask extends AsyncTask<Double, Void, String[]> {
 
     private final String LOG_TAG = FetchPollutionTask.class.getSimpleName();
 
-    private String[] getPollutionDataFromJson(String forecastJsonStr)
-            throws JSONException {
+    private String[] getPollutionDataFromJson(String forecastJsonStr) throws JSONException {
 
         // These are the names of the JSON objects that need to be extracted.
         final String OWM_TIME = "time";

@@ -16,7 +16,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -24,8 +23,6 @@ import com.google.maps.android.clustering.ClusterManager;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import database.PollutionDbItem;
 import database.SqlHelper;
@@ -87,32 +84,35 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnCameraIdleListener(mClusterManager);
 
         // Add cluster items (markers) to the cluster manager.
-        addItems();
+        loadData();
     }
 
-    private void addItems() {
+//    private void addItems() {
+//
+//        // Add ten cluster items in close proximity, for purposes of this example.
+//        mClusterManager.setRenderer(new OwnRendring(getApplicationContext(), mMap, mClusterManager));
+//        List<PollutionDbItem> pollutions = loadData();
+//
+////        SqlHelper db = getInstance(this);
+////        List<PollutionDbItem> pollutions = getInstance(this).getAllPollutionSources();
+////        db.close();
+//
+//        for (PollutionDbItem pollutionDbItem : pollutions) {
+//
+//            mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(getDrawable(pollutionDbItem)), pollutionDbItem.getLatitude(),
+//                    pollutionDbItem.getLongitude(), pollutionDbItem.getTitle(), null));
+//
+//        }
+//    }
 
-        // Add ten cluster items in close proximity, for purposes of this example.
+    public void  loadData() {
+        String tContents = "";
         mClusterManager.setRenderer(new OwnRendring(getApplicationContext(), mMap, mClusterManager));
-        List<PollutionDbItem> pollutions = loadData();
 
 //        SqlHelper db = getInstance(this);
 //        List<PollutionDbItem> pollutions = getInstance(this).getAllPollutionSources();
 //        db.close();
 
-        for (PollutionDbItem pollutionDbItem : pollutions) {
-            Bitmap scaledBitmap = getDrawable(pollutionDbItem);
-            BitmapDescriptor bitmapDescriptor =
-                    BitmapDescriptorFactory.fromBitmap(scaledBitmap);
-
-            mClusterManager.addItem(new PollutionItem(bitmapDescriptor, pollutionDbItem.getLatitude(),
-                    pollutionDbItem.getLongitude(), pollutionDbItem.getTitle(), null));
-
-        }
-    }
-
-    public List<PollutionDbItem> loadData() {
-        String tContents = "";
 
         try {
             InputStream stream = this.getResources().openRawResource(R.raw.processed); // you will get the method getAssets anywhere from current activity.
@@ -125,30 +125,31 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             // Handle exceptions here
         }
 
-        List<PollutionDbItem> pollutionItems = new ArrayList<>();
-
         String[] ary = tContents.split("\n");
+        int i=1;
         for (String line : ary) {
 
-            String[] details = line.split(",");
 
-            Integer id = Integer.valueOf(details[0]);
-            String title = details[1];
-            String airPollutant = details[2];
-            double airPollutionLevel = Double.valueOf(details[3]);
-            double exceedanceThreashold =  Double.valueOf(details[4]);
-            double latitude =  Double.valueOf( details[5]);
-            double longitude =   Double.valueOf(details[6]);
-            String type = details[7];
+            if(i++<800) {
+                String[] details = line.split(",");
 
-            PollutionDbItem e = new PollutionDbItem(latitude, longitude, title, type,
-                    airPollutant, airPollutionLevel, exceedanceThreashold);
-            e.setId(id);
-            pollutionItems.add(e);
+                Integer id = Integer.valueOf(details[0]);
+                String title = details[1];
+                String airPollutant = details[2];
+                double airPollutionLevel = Double.valueOf(details[3]);
+                double exceedanceThreashold = Double.valueOf(details[4]);
+                double latitude = Double.valueOf(details[5]);
+                double longitude = Double.valueOf(details[6]);
+                String type = details[7];
+
+                PollutionDbItem pollutionDbItem = new PollutionDbItem(latitude, longitude, title, type,
+                        airPollutant, airPollutionLevel, exceedanceThreashold);
+                pollutionDbItem.setId(id);
+
+                mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(getDrawable(pollutionDbItem)), pollutionDbItem.getLatitude(),
+                        pollutionDbItem.getLongitude(), pollutionDbItem.getTitle(), null));
+            }
         }
-        System.out.println(pollutionItems);
-
-        return pollutionItems.subList(0,10);
 
     }
 

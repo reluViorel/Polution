@@ -87,6 +87,7 @@ public class SqlHelper extends SQLiteOpenHelper {
 //        addPollutionSource(db,new PollutionDbItem(45.364750, 23.260975,"Paroşeni ","plant"));
 
     }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older Pollutions table if existed
@@ -95,6 +96,7 @@ public class SqlHelper extends SQLiteOpenHelper {
         // create fresh Pollutions table
         this.onCreate(db);
     }
+
     // Pollutions table name
     private static final String TABLE_POLLUTIONS = "pollutions";
 
@@ -232,6 +234,7 @@ public class SqlHelper extends SQLiteOpenHelper {
         db.close();
         Log.d("deletePollution", dbItem.toString());
     }
+
     // Deleting single dbItem
     public void deleteAllPollutionSource() {
 
