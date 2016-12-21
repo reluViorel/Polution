@@ -22,6 +22,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.ClusterManager;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import database.PollutionDbItem;
@@ -91,18 +94,62 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add ten cluster items in close proximity, for purposes of this example.
         mClusterManager.setRenderer(new OwnRendring(getApplicationContext(), mMap, mClusterManager));
+        List<PollutionDbItem> pollutions = loadData();
 
-        SqlHelper db = getInstance(this);
-        List<PollutionDbItem> pollutions = getInstance(this).getAllPollutionSources();
-        db.close();
+//        SqlHelper db = getInstance(this);
+//        List<PollutionDbItem> pollutions = getInstance(this).getAllPollutionSources();
+//        db.close();
 
         for (PollutionDbItem pollutionDbItem : pollutions) {
             Bitmap scaledBitmap = getDrawable(pollutionDbItem);
             BitmapDescriptor bitmapDescriptor =
                     BitmapDescriptorFactory.fromBitmap(scaledBitmap);
+
             mClusterManager.addItem(new PollutionItem(bitmapDescriptor, pollutionDbItem.getLatitude(),
                     pollutionDbItem.getLongitude(), pollutionDbItem.getTitle(), null));
+
         }
+    }
+
+    public List<PollutionDbItem> loadData() {
+        String tContents = "";
+
+        try {
+            InputStream stream = this.getResources().openRawResource(R.raw.processed); // you will get the method getAssets anywhere from current activity.
+            int size = stream.available();
+            byte[] buffer = new byte[size];
+            stream.read(buffer);
+            stream.close();
+            tContents = new String(buffer);
+        } catch (IOException e) {
+            // Handle exceptions here
+        }
+
+        List<PollutionDbItem> pollutionItems = new ArrayList<>();
+
+        String[] ary = tContents.split("\n");
+        for (String line : ary) {
+
+            String[] details = line.split(",");
+
+            Integer id = Integer.valueOf(details[0]);
+            String title = details[1];
+            String airPollutant = details[2];
+            double airPollutionLevel = Double.valueOf(details[3]);
+            double exceedanceThreashold =  Double.valueOf(details[4]);
+            double latitude =  Double.valueOf( details[5]);
+            double longitude =   Double.valueOf(details[6]);
+            String type = details[7];
+
+            PollutionDbItem e = new PollutionDbItem(latitude, longitude, title, type,
+                    airPollutant, airPollutionLevel, exceedanceThreashold);
+            e.setId(id);
+            pollutionItems.add(e);
+        }
+        System.out.println(pollutionItems);
+
+        return pollutionItems.subList(0,10);
+
     }
 
     private Bitmap getDrawable(PollutionDbItem pollutionDbItem) {
@@ -111,13 +158,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         Bitmap bitmap;
         BitmapDrawable bitmapDrawable;
         switch (pollutionDbItem.getType()) {
-            case "airplane":
+            case "Background":
                 drawable = getResources().getDrawable(R.drawable.airplane);
                 bitmapDrawable = (BitmapDrawable) drawable;
                 bitmap = bitmapDrawable.getBitmap();
                 scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 4, bitmap.getHeight() / 4, false);
                 break;
-            case "plant":
+            case "Industrial":
+                drawable = getResources().getDrawable(R.drawable.factory);
+                bitmapDrawable = (BitmapDrawable) drawable;
+                bitmap = bitmapDrawable.getBitmap();
+                scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 10, bitmap.getHeight() / 10, false);
+                break;
+            case "Traffic":
                 drawable = getResources().getDrawable(R.drawable.factory);
                 bitmapDrawable = (BitmapDrawable) drawable;
                 bitmap = bitmapDrawable.getBitmap();
