@@ -29,22 +29,26 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-
-
         Intent intent = getIntent();
         String message = intent.getStringExtra(Intent.EXTRA_TEXT);
+        String title = intent.getStringExtra(Intent.EXTRA_TITLE);
+
         double latitude=0;
         double longitude=10;
 
         FetchPollutionTask task = new FetchPollutionTask();
         task.execute(latitude,longitude);
 
-        TextView textView = new TextView(this);
-        textView.setTextSize(40);
+        TextView titleView =  (TextView) findViewById(R.id.titleView);
+        titleView.setTextSize(30);
+        titleView.setText(title);
+
+        TextView textView = (TextView) findViewById(R.id.textView);
+        textView.setTextSize(20);
         textView.setText(message);
 
         ViewGroup layout = (ViewGroup) findViewById(R.id.activity_display_details);
-        layout.addView(textView);
+
 
         ActionBar ab = getSupportActionBar();
         // Enable the Up button

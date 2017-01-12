@@ -145,7 +145,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 pollutionDbItem.setId(id);
 
                 mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(getDrawable(pollutionDbItem)), pollutionDbItem.getLatitude(),
-                        pollutionDbItem.getLongitude(), pollutionDbItem.getTitle(), null));
+                        pollutionDbItem.getLongitude(), pollutionDbItem.getTitle(), airPollutant + " " + airPollutionLevel + " "+exceedanceThreashold));
 
         }
 
@@ -158,7 +158,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         bitmap = bitmapDrawable.getBitmap();
         scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 4, bitmap.getHeight() / 4, false);
                 
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap), 46.17655,21.262022,"Arad",null));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.17655,21.262022,"Arad",null));
         mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.521946,26.910278,"Bacau",null));
         mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),47.658389,23.470022,"Tautii Magheraus",null));
         mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),44.503194,26.102111,"Aurel Vlaicu",null));
@@ -235,15 +235,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onInfoWindowClick(Marker arg0) {
+                Intent intent = new Intent(getApplicationContext(), DisplayDetailsActivity.class);
+                intent.putExtra(Intent.EXTRA_TEXT, arg0.getSnippet());
+                intent.putExtra(Intent.EXTRA_TITLE, arg0.getTitle());
+
+                intent.putExtra("Latitude", arg0.getPosition().latitude);
+                intent.putExtra("Longitude", arg0.getPosition().longitude);
+                intent.putExtra("PollutionId", arg0.getPosition().longitude);
+
                 Toast.makeText(MainActivity.this,
                         arg0.getTitle(),
                         Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(getApplicationContext(), DisplayDetailsActivity.class);
-                intent.putExtra(Intent.EXTRA_TEXT, arg0.getTitle());
-                intent.putExtra("Latitude", arg0.getPosition().latitude);
-                intent.putExtra("Longitude", arg0.getPosition().longitude);
-                intent.putExtra("PollutionId", arg0.getPosition().longitude);
+
 
                 startActivity(intent);
             }
