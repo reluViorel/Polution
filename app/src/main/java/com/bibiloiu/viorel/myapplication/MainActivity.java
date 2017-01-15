@@ -57,28 +57,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         // Position the map.
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(44.4379853, 25.9545552), 5));
 
-        // Initialize the manager with the context and the map.
-        // (Activity extends context, so we can pass 'this' in the constructor.)
         mClusterManager = new ClusterManager<>(this, mMap);
 
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
-//        mClusterManager.setOnClusterItemInfoWindowClickListener(
-//                new ClusterManager.OnClusterItemInfoWindowClickListener<PollutionItem>() {
-//
-//                    @Override
-//                    public void onClusterItemInfoWindowClick(PollutionItem pollutionItem) {
-//                        Toast.makeText(MainActivity.this,pollutionItem.getTitle(),Toast.LENGTH_SHORT).show();
-//
-//                        Intent intent = new Intent(getApplicationContext(), DisplayDetailsActivity.class);
-//                        intent.putExtra(Intent.EXTRA_TEXT, pollutionItem.getTitle());
-//                        intent.putExtra("Latitude", pollutionItem.getPosition().latitude);
-//                        intent.putExtra("Longitude", pollutionItem.getPosition().longitude);
-//                        intent.putExtra("PollutionId", pollutionItem.getPosition().longitude);
-//
-//                        startActivity(intent);
-//                    }
-//                });
 
         mMap.setOnMarkerClickListener(mClusterManager);
         mMap.setOnCameraIdleListener(mClusterManager);
@@ -87,32 +67,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         loadData();
     }
 
-//    private void addItems() {
-//
-//        // Add ten cluster items in close proximity, for purposes of this example.
-//        mClusterManager.setRenderer(new OwnRendring(getApplicationContext(), mMap, mClusterManager));
-//        List<PollutionDbItem> pollutions = loadData();
-//
-////        SqlHelper db = getInstance(this);
-////        List<PollutionDbItem> pollutions = getInstance(this).getAllPollutionSources();
-////        db.close();
-//
-//        for (PollutionDbItem pollutionDbItem : pollutions) {
-//
-//            mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(getDrawable(pollutionDbItem)), pollutionDbItem.getLatitude(),
-//                    pollutionDbItem.getLongitude(), pollutionDbItem.getTitle(), null));
-//
-//        }
-//    }
+
 
     public void  loadData() {
         String tContents = "";
         mClusterManager.setRenderer(new OwnRendring(getApplicationContext(), mMap, mClusterManager));
-
-//        SqlHelper db = getInstance(this);
-//        List<PollutionDbItem> pollutions = getInstance(this).getAllPollutionSources();
-//        db.close();
-
 
         try {
             InputStream stream = this.getResources().openRawResource(R.raw.processed); // you will get the method getAssets anywhere from current activity.
@@ -144,8 +103,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         airPollutant, airPollutionLevel, exceedanceThreashold);
                 pollutionDbItem.setId(id);
 
-                mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(getDrawable(pollutionDbItem)), pollutionDbItem.getLatitude(),
-                        pollutionDbItem.getLongitude(), pollutionDbItem.getTitle(), airPollutant + " " + airPollutionLevel + " "+exceedanceThreashold));
+                mClusterManager.addItem(
+                        new PollutionItem(BitmapDescriptorFactory.fromBitmap(getDrawable(pollutionDbItem)),
+                                pollutionDbItem.getLatitude(),
+                        pollutionDbItem.getLongitude(), pollutionDbItem.getTitle(),
+                                "Factorul de poluare este " +airPollutant + " actual fiind " + airPollutionLevel + " depasind limita de "+exceedanceThreashold));
 
         }
 
@@ -158,32 +120,32 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         bitmap = bitmapDrawable.getBitmap();
         scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 4, bitmap.getHeight() / 4, false);
                 
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.17655,21.262022,"Arad",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.521946,26.910278,"Bacau",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),47.658389,23.470022,"Tautii Magheraus",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),44.503194,26.102111,"Aurel Vlaicu",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),44.362222,28.488333,"Mihail Kogalniceanu",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.785167,23.686167,"Cluj Napoca",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.42,22.253333,"Caransebes",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),44.318139,23.888611,"Craiova",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),47.178492,27.620631,"Iasi",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),47.025278,21.9025,"Oradea",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),44.572161,26.102178,"Henri Coanda",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.785597,24.091342,"Sibiu",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),47.703275,22.8857,"Satu Mare",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),47.6875,26.354056,"Stefan Cel Mare",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.062486,28.714311,"Cataloi",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.467714,24.412525,"Transilvania Targu Mures",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.809861,21.337861,"Traian Vuia",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.3201,24.3157,"Aeroclub Mures",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.4649,24.053,"Aeroclub Sibiu",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.4649,24.053,"Aeroclub Sibiu",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.436,24.4445,"Aerodrom Cioca",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.471009,21.111967,"Aeroclub Cioca",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.4153,25.3137,"Aeroclub Ghimbav",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.5153,22.5813,"Aeroclub Deva",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.4643,23.4258,"Aeroclub Cluj",null));
-        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),43.9841995,28.6096992,"Tuzla",null));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.17655,21.262022,"Arad","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.521946,26.910278,"Bacau","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),47.658389,23.470022,"Tautii Magheraus","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),44.503194,26.102111,"Aurel Vlaicu","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),44.362222,28.488333,"Mihail Kogalniceanu","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.785167,23.686167,"Cluj Napoca","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.42,22.253333,"Caransebes","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),44.318139,23.888611,"Craiova","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),47.178492,27.620631,"Iasi","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),47.025278,21.9025,"Oradea","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),44.572161,26.102178,"Henri Coanda","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.785597,24.091342,"Sibiu","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),47.703275,22.8857,"Satu Mare","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),47.6875,26.354056,"Stefan Cel Mare","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.062486,28.714311,"Cataloi","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.467714,24.412525,"Transilvania Targu Mures","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.809861,21.337861,"Traian Vuia","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.3201,24.3157,"Aeroclub Mures","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.4649,24.053,"Aeroclub Sibiu","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.4649,24.053,"Aeroclub Sibiu","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.436,24.4445,"Aerodrom Cioca","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.471009,21.111967,"Aeroclub Cioca","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.4153,25.3137,"Aeroclub Ghimbav","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.5153,22.5813,"Aeroclub Deva","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.4643,23.4258,"Aeroclub Cluj","Aeroport sursa de poluare"));
+        mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),43.9841995,28.6096992,"Tuzla","Aeroport sursa de poluare"));
 
     }
 
@@ -194,18 +156,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         BitmapDrawable bitmapDrawable;
         switch (pollutionDbItem.getType()) {
             case "Background":
-                drawable = getResources().getDrawable(R.drawable.background);
-                bitmapDrawable = (BitmapDrawable) drawable;
-                bitmap = bitmapDrawable.getBitmap();
-                scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 4, bitmap.getHeight() / 4, false);
-                break;
-            case "Industrial":
-                drawable = getResources().getDrawable(R.drawable.factory);
+                drawable = getResources().getDrawable(R.drawable.back);
                 bitmapDrawable = (BitmapDrawable) drawable;
                 bitmap = bitmapDrawable.getBitmap();
                 scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 10, bitmap.getHeight() / 10, false);
                 break;
-            case "Traffic":
+            case "Industrial":
                 drawable = getResources().getDrawable(R.drawable.factory);
                 bitmapDrawable = (BitmapDrawable) drawable;
                 bitmap = bitmapDrawable.getBitmap();
@@ -246,8 +202,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 Toast.makeText(MainActivity.this,
                         arg0.getTitle(),
                         Toast.LENGTH_SHORT).show();
-
-
 
                 startActivity(intent);
             }
