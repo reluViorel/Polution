@@ -68,7 +68,7 @@ public class OwnRendring extends DefaultClusterRenderer<PollutionItem> {
         if(descriptor == null) {
             this.mColoredCircleBackground.getPaint().setColor(this.getColor(bucket));
             descriptor = BitmapDescriptorFactory.fromBitmap(this.mIconGenerator.makeIcon(String.valueOf(cluster.getSize())));
-            this.mIcons.put(bucket, descriptor);
+            this.mIcons.put(cluster.getSize(), descriptor);
         }
 
         markerOptions.icon(descriptor);

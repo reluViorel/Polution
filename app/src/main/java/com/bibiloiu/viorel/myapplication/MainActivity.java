@@ -55,7 +55,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void setUpCluster() {
         // Position the map.
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(44.4379853, 25.9545552), 5));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(44.4379853, 25.9545552), 7));
 
         mClusterManager = new ClusterManager<>(this, mMap);
 
@@ -110,6 +110,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                                 "Factorul de poluare este " +airPollutant + " actual fiind " + airPollutionLevel + " depasind limita de "+exceedanceThreashold));
 
         }
+        mClusterManager.cluster();
+
 
         Bitmap scaledBitmap;
         Drawable drawable;
@@ -146,6 +148,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),45.5153,22.5813,"Aeroclub Deva","Aeroport sursa de poluare"));
         mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),46.4643,23.4258,"Aeroclub Cluj","Aeroport sursa de poluare"));
         mClusterManager.addItem(new PollutionItem(BitmapDescriptorFactory.fromBitmap(scaledBitmap),43.9841995,28.6096992,"Tuzla","Aeroport sursa de poluare"));
+        mClusterManager.cluster();
 
     }
 
