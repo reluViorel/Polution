@@ -1,7 +1,6 @@
 package com.bibiloiu.viorel.myapplication;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -24,24 +23,10 @@ import com.google.maps.android.clustering.ClusterManager;
 import java.io.IOException;
 import java.io.InputStream;
 
-import database.PollutionDbItem;
-import database.SqlHelper;
-
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private ClusterManager<PollutionItem> mClusterManager;
-    private static SqlHelper helperSqlInstance;
 
-    public static synchronized SqlHelper getInstance(Context context) {
-
-        // Use the application context, which will ensure that you
-        // don't accidentally leak an Activity's context.
-        // See this article for more information: http://bit.ly/6LRzfx
-        if (helperSqlInstance == null) {
-            helperSqlInstance = new SqlHelper(context.getApplicationContext());
-        }
-        return helperSqlInstance;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +35,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        getInstance(this);
     }
 
     private void setUpCluster() {
@@ -99,15 +83,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 double longitude = Double.valueOf(details[6]);
                 String type = details[7];
 
-                PollutionDbItem pollutionDbItem = new PollutionDbItem(latitude, longitude, title, type,
-                        airPollutant, airPollutionLevel, exceedanceThreashold);
-                pollutionDbItem.setId(id);
 
-                mClusterManager.addItem(
-                        new PollutionItem(BitmapDescriptorFactory.fromBitmap(getDrawable(pollutionDbItem)),
-                                pollutionDbItem.getLatitude(),
-                        pollutionDbItem.getLongitude(), pollutionDbItem.getTitle(),
-                                "Factorul de poluare este " +airPollutant + " actual fiind " + airPollutionLevel + " depasind limita de "+exceedanceThreashold));
+            PollutionItem myItem = new PollutionItem(BitmapDescriptorFactory.fromBitmap(getDrawable(type)),
+                    latitude,longitude, title,
+                    "Factorul de poluare este " + airPollutant + " actual fiind " + airPollutionLevel + " depasind limita de " + exceedanceThreashold);
+            mClusterManager.addItem(myItem);
 
         }
         mClusterManager.cluster();
@@ -152,12 +132,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private Bitmap getDrawable(PollutionDbItem pollutionDbItem) {
+    private Bitmap getDrawable(String type ) {
         Bitmap scaledBitmap;
         Drawable drawable;
         Bitmap bitmap;
         BitmapDrawable bitmapDrawable;
-        switch (pollutionDbItem.getType()) {
+        switch (type) {
             case "Background":
                 drawable = getResources().getDrawable(R.drawable.back);
                 bitmapDrawable = (BitmapDrawable) drawable;
