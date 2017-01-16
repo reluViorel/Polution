@@ -6,9 +6,9 @@ import com.google.maps.android.clustering.ClusterItem;
 
 public class PollutionItem implements ClusterItem {
     private final LatLng mPosition;
-    BitmapDescriptor icon;
-    String title;
-    String snippet;
+    private BitmapDescriptor icon;
+    private String title;
+    private String snippet;
 
     public PollutionItem(BitmapDescriptor ic, Double lat , Double lng,String tit ,String sni) {
         mPosition = new LatLng(lat, lng);

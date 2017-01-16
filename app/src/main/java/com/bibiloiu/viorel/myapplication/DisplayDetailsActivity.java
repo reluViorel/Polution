@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,7 +19,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.ExecutionException;
 
 
 public class DisplayDetailsActivity extends AppCompatActivity {
@@ -36,15 +34,15 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         Double latitude = intent.getDoubleExtra("Latitude",44.42);
         Double longitude = intent.getDoubleExtra("Longitude",26.10);
 
-        FetchPollutionTask task = new FetchPollutionTask();
-        Double pollutionResult=null;
-        try {
-            pollutionResult = task.execute(latitude,longitude).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+        FetchPollutionTask task = new FetchPollutionTask(){
+            @Override public void onPostExecute(Double result)
+            {
+                TextView weatherView = (TextView) findViewById(R.id.weatherView);
+                weatherView.setTextSize(20);
+                weatherView.setText("Nivelul poluantului O3 conform Weather Map =" + result);
+            }
+        };
+        task.execute(latitude,longitude);
 
         TextView titleView =  (TextView) findViewById(R.id.titleView);
         titleView.setTextSize(30);
@@ -56,11 +54,6 @@ public class DisplayDetailsActivity extends AppCompatActivity {
 
         ViewGroup layout = (ViewGroup) findViewById(R.id.activity_display_details);
 
-        if(pollutionResult !=null){
-            TextView weatherView = (TextView) findViewById(R.id.weatherView);
-            weatherView.setTextSize(20);
-            weatherView.setText("Nivelul poluantului O3 conform Weather Map =" + pollutionResult);
-        }
         ActionBar ab = getSupportActionBar();
         // Enable the Up button
         ab.setDisplayHomeAsUpEnabled(true);
@@ -70,6 +63,13 @@ public class DisplayDetailsActivity extends AppCompatActivity {
 class FetchPollutionTask extends AsyncTask<Double, Void, Double> {
 
     private final String LOG_TAG = FetchPollutionTask.class.getSimpleName();
+
+//    @Override
+//    protected void onPostExecute(Double param) {
+//        TextView weatherView = (TextView) findViewById(R.id.weatherView);
+//        weatherView.setTextSize(20);
+//        weatherView.setText("Nivelul poluantului O3 conform Weather Map =" + pollutionResult);
+//    }
 
     private Double getPollutionDataFromJson(String jsonStr) throws JSONException {
 
@@ -180,4 +180,7 @@ class FetchPollutionTask extends AsyncTask<Double, Void, Double> {
 
         return null;
     }
+
+
+
 }
